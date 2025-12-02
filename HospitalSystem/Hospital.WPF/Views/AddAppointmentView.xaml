@@ -1,0 +1,60 @@
+﻿<Window x:Class="Hospital.WPF.Views.AddAppointmentView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vmDetails="clr-namespace:Hospital.WPF.ViewModels.AppointmentDetails"
+        xmlns:vDetails="clr-namespace:Hospital.WPF.Views.AppointmentDetails"
+        mc:Ignorable="d"
+        Title="Добавить назначение" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterOwner">
+
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type vmDetails:PillAppointmentDetailsViewModel}">
+            <vDetails:PillAppointmentDetailsView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vmDetails:InjectionAppointmentDetailsViewModel}">
+            <vDetails:InjectionAppointmentDetailsView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vmDetails:DiagnosticAppointmentDetailsViewModel}">
+            <vDetails:DiagnosticAppointmentDetailsView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vmDetails:ProphylacticAppointmentDetailsViewModel}">
+            <vDetails:ProphylacticAppointmentDetailsView/>
+        </DataTemplate>
+    </Window.Resources>
+
+    <Grid Margin="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Text="Тип назначения:" FontWeight="Bold"/>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,5,0,10">
+            <RadioButton Content="Таблетки" GroupName="AppointmentType" IsChecked="True"
+                         Command="{Binding SelectPillTypeCommand}"/>
+            <RadioButton Content="Инъекция" GroupName="AppointmentType" Margin="10,0,0,0"
+                         Command="{Binding SelectInjectionTypeCommand}"/>
+            <RadioButton Content="Диагностическое" GroupName="AppointmentType" Margin="10,0,0,0"
+                         Command="{Binding SelectDiagnosticTypeCommand}"/>
+            <RadioButton Content="Профилактическое" GroupName="AppointmentType" Margin="10,0,0,0"
+                         Command="{Binding SelectProphylacticTypeCommand}"/>
+        </StackPanel>
+
+        <ContentControl Grid.Row="2" Content="{Binding CurrentDetailsViewModel}" Margin="0,5,0,10"/>
+
+        <TextBlock Grid.Row="3" Text="Общие заметки:"/>
+        <TextBox Grid.Row="4" Text="{Binding Notes, UpdateSourceTrigger=PropertyChanged}" MinHeight="60" Margin="0,5,0,15"
+                 TextWrapping="Wrap" AcceptsReturn="True"/>
+
+        <StackPanel Grid.Row="5" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Content="Добавить" IsDefault="True" Command="{Binding CreateAppointmentCommand}" MinWidth="80" Margin="0,0,10,0"/>
+            <Button Content="Отмена" IsCancel="True" Command="{Binding CancelCommand}" MinWidth="80"/>
+        </StackPanel>
+    </Grid>
+</Window>

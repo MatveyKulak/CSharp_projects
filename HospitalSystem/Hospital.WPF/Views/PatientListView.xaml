@@ -1,0 +1,71 @@
+﻿<UserControl x:Class="Hospital.WPF.Views.PatientListView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <TextBlock Text="Поиск:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+            <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Width="300"/>
+        </StackPanel>
+
+        <Grid Grid.Row="1" Margin="0,10,0,0">
+            <DataGrid ItemsSource="{Binding FilteredPatients}" 
+                      SelectedItem="{Binding SelectedPatient}"
+                      AutoGenerateColumns="False" IsReadOnly="True">
+                <DataGrid.InputBindings>
+                    <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding OpenPatientDetailsCommand}"/>
+                </DataGrid.InputBindings>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Фамилия" Binding="{Binding LastName}" Width="*"/>
+                    <DataGridTextColumn Header="Имя" Binding="{Binding FirstName}" Width="*"/>
+                    <DataGridTextColumn Header="Отчество" Binding="{Binding MiddleName}" Width="*"/>
+                    <DataGridTextColumn Header="Дата рождения" Binding="{Binding DateOfBirth, StringFormat='dd.MM.yyyy'}" Width="120"/>
+                    <DataGridTextColumn Header="Адрес" Binding="{Binding Address}" Width="2*"/>
+                    <DataGridTextColumn Header="Телефон" Binding="{Binding PhoneNumber}" Width="*"/>
+                    <DataGridTextColumn Header="Диагноз" Binding="{Binding Diagnosis}" Width="2*"/>
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <TextBlock Text="Нет пациентов для отображения." 
+                       HorizontalAlignment="Center" VerticalAlignment="Center"
+                       FontSize="16" Foreground="Gray">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding FilteredPatients.Count}" Value="0">
+                                <Setter Property="Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+        </Grid>
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
+            <Button Padding="10,5" Margin="0,0,10,0" Command="{Binding AddPatientCommand}">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE710;" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                    <TextBlock Text="Добавить пациента"/>
+                </StackPanel>
+            </Button>
+            <Button Padding="10,5" Margin="0,0,10,0" Command="{Binding EditPatientCommand}">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE70F;" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                    <TextBlock Text="Редактировать"/>
+                </StackPanel>
+            </Button>
+            <Button Padding="10,5" Command="{Binding DeletePatientCommand}">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE74D;" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                    <TextBlock Text="Выписать (Удалить)"/>
+                </StackPanel>
+            </Button>
+        </StackPanel>
+    </Grid>
+</UserControl>

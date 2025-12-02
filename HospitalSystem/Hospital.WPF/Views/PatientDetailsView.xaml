@@ -1,0 +1,93 @@
+﻿<Window x:Class="Hospital.WPF.Views.PatientDetailsView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:enums="clr-namespace:Hospital.Business.Enums;assembly=Hospital.Business"
+        Title="Электронная медицинская карта" Height="500" Width="700" WindowStartupLocation="CenterOwner">
+
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+
+        <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type sys:Enum}" x:Key="AppointmentStatusValuesProvider">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="enums:AppointmentStatus"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+
+        <Style TargetType="DataGridColumnHeader">
+            <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Margin="0,0,0,15">
+            <TextBlock FontSize="20" FontWeight="Bold">
+                <Run Text="{Binding SelectedPatient.LastName}"/> <Run Text=" "/> <Run Text="{Binding SelectedPatient.FirstName}"/>
+            </TextBlock>
+            <TextBlock Margin="0,5,0,0">
+                <Run Text="Дата рождения:"/> <Run Text="{Binding SelectedPatient.DateOfBirth, StringFormat='dd.MM.yyyy'}"/>
+            </TextBlock>
+            <TextBlock>
+                <Run Text="Диагноз при поступлении:"/> <Run Text="{Binding SelectedPatient.Diagnosis}"/>
+            </TextBlock>
+        </StackPanel>
+
+        <TextBlock Grid.Row="1" Text="Назначения:" FontWeight="Bold" FontSize="16" Margin="0,0,0,5"/>
+
+        <DataGrid Grid.Row="2" ItemsSource="{Binding SelectedPatient.MedicalRecord.Appointments}"
+                  SelectedItem="{Binding SelectedAppointment, Mode=TwoWay}"
+                  AutoGenerateColumns="False" 
+                  IsReadOnly="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Дата" Binding="{Binding AppointmentDate, StringFormat='dd.MM.yyyy HH:mm'}" Width="150" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Тип" Binding="{Binding AppointmentType}" Width="150" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Описание" Binding="{Binding Summary}" Width="*" IsReadOnly="True"/>
+
+                <DataGridTemplateColumn Header="Статус" Width="120">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding StatusText}" VerticalAlignment="Center" Margin="4,0"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <ComboBox ItemsSource="{Binding Source={StaticResource AppointmentStatusValuesProvider}}"
+                                      SelectedItem="{Binding Status, Mode=TwoWay}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
+            <Button Padding="10,5" Margin="0,0,10,0" Command="{Binding CompleteAppointmentCommand}"
+                    Visibility="{Binding IsNurseOrDoctor, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE930;" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                    <TextBlock Text="Отметить как выполненное"/>
+                </StackPanel>
+            </Button>
+            <Button Padding="10,5" Margin="0,0,10,0" Command="{Binding DeleteAppointmentCommand}"
+                    Visibility="{Binding IsDoctor, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE74D;" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                    <TextBlock Text="Удалить назначение"/>
+                </StackPanel>
+            </Button>
+            <Button Padding="10,5" Command="{Binding AddAppointmentCommand}"
+                    Visibility="{Binding IsDoctor, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE710;" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                    <TextBlock Text="Добавить назначение"/>
+                </StackPanel>
+            </Button>
+        </StackPanel>
+    </Grid>
+</Window>

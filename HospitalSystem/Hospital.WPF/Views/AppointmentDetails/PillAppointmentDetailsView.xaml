@@ -1,0 +1,14 @@
+﻿<UserControl x:Class="Hospital.WPF.Views.AppointmentDetails.PillAppointmentDetailsView"
+xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <StackPanel>
+        <TextBlock Text="Название лекарства:"/>
+        <TextBox Text="{Binding MedicationName, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,5"/>
+        <TextBlock Text="Дозировка:"/>
+        <TextBox Text="{Binding Dosage, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,5"/>
+        <TextBlock Text="Частота приема:"/>
+        <TextBox Text="{Binding Frequency, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,5"/>
+        <TextBlock Text="Количество дней:"/>
+        <TextBox Text="{Binding Days, UpdateSourceTrigger=PropertyChanged}"/>
+    </StackPanel>
+</UserControl>
